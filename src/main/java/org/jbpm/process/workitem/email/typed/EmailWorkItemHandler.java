@@ -20,6 +20,9 @@ package org.jbpm.process.workitem.email.typed;
 import org.drools.core.process.instance.TypedWorkItemHandler;
 import org.drools.core.process.instance.impl.TypedWorkItemImpl;
 import org.jbpm.bpmn2.handler.WorkItemHandlerRuntimeException;
+import org.jbpm.process.workitem.core.util.Wid;
+import org.jbpm.process.workitem.core.util.WidParameter;
+import org.jbpm.process.workitem.core.util.WidResult;
 import org.kie.api.runtime.process.TypedWorkItem;
 import org.kie.api.runtime.process.WorkItemManager;
 
@@ -37,10 +40,14 @@ import org.kie.api.runtime.process.WorkItemManager;
  * <p>
  * Sending an email cannot be aborted.
  */
+
+@Wid(widfile = "Email.wid", name = "Email",
+        displayName = "Email",
+        defaultHandler = "mvel: new org.jbpm.process.workitem.email.typed.EmailWorkItemHandler()",
+        typedParameters = Message.class)
 public class EmailWorkItemHandler implements TypedWorkItemHandler<TypedWorkItem<Message, Object>> {
 
     private Connection connection;
-    private TemplateManager templateManager = TemplateManager.get();
 
     public EmailWorkItemHandler() {
     }
