@@ -142,11 +142,11 @@ public class SendHtml {
 
             for (Recipient recipient : message.getRecipients().getRecipients()) {
                 RecipientType type = null;
-                if ("To".equals(recipient.getType())) {
+                if (Recipient.Type.TO.equals(recipient.getType())) {
                     type = Message.RecipientType.TO;
-                } else if ("Cc".equals(recipient.getType())) {
+                } else if (Recipient.Type.CC.equals(recipient.getType())) {
                     type = Message.RecipientType.CC;
-                } else if ("Bcc".equals(recipient.getType())) {
+                } else if (Recipient.Type.BCC.equals(recipient.getType())) {
                     type = Message.RecipientType.BCC;
                 } else {
                     throw new RuntimeException("Unable to determine recipient type");

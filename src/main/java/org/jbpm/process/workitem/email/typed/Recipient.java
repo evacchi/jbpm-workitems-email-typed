@@ -17,33 +17,39 @@
 
 package org.jbpm.process.workitem.email.typed;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
+
 public class Recipient {
-    private String type;
+    enum Type { TO, CC, BCC }
+    private Type type;
 
     private String displayName;
 
+    @Email
     private String email;
 
+    @Pattern(regexp = "[+]\\d{2}[(]\\d{2}[)]\\d{4}[\\-]\\d{4}")
     private String mobile;
 
     public static Recipient to(String email) {
         Recipient recipient = new Recipient();
         recipient.email = email;
-        recipient.type = "To";
+        recipient.type = Type.TO;
         return recipient;
     }
 
     public static Recipient cc(String email) {
         Recipient recipient = new Recipient();
         recipient.email = email;
-        recipient.type = "Cc";
+        recipient.type = Type.CC;
         return recipient;
     }
 
     public static Recipient bcc(String email) {
         Recipient recipient = new Recipient();
         recipient.email = email;
-        recipient.type = "Bcc";
+        recipient.type = Type.BCC;
         return recipient;
     }
 
@@ -52,7 +58,7 @@ public class Recipient {
     public Recipient() {
     }
 
-    public Recipient(String type,
+    public Recipient(Type type,
                      String displayName,
                      String email,
                      String mobile) {
@@ -62,11 +68,11 @@ public class Recipient {
         this.mobile = mobile;
     }
 
-    public String getType() {
+    public Type getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Type type) {
         this.type = type;
     }
 

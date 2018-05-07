@@ -22,10 +22,6 @@ public class Email {
     private Message    message;
     private Connection connection;
 
-    public String[] getUsedIdentigiers() {
-        return null;
-    }
-
     public Email() {
         this.message = new Message();
         this.connection = new Connection();

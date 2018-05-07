@@ -17,12 +17,15 @@
 
 package org.jbpm.process.workitem.email.typed;
 
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.ValidatorFactory;
+
 import org.drools.core.process.instance.TypedWorkItemHandler;
 import org.drools.core.process.instance.impl.TypedWorkItemImpl;
 import org.jbpm.bpmn2.handler.WorkItemHandlerRuntimeException;
-import org.jbpm.process.workitem.core.util.Wid;
-import org.jbpm.process.workitem.core.util.WidParameter;
-import org.jbpm.process.workitem.core.util.WidResult;
 import org.kie.api.runtime.process.TypedWorkItem;
 import org.kie.api.runtime.process.WorkItemManager;
 
@@ -40,11 +43,6 @@ import org.kie.api.runtime.process.WorkItemManager;
  * <p>
  * Sending an email cannot be aborted.
  */
-
-@Wid(widfile = "Email.wid", name = "Email",
-        displayName = "Email",
-        defaultHandler = "mvel: new org.jbpm.process.workitem.email.typed.EmailWorkItemHandler()",
-        typedParameters = Message.class)
 public class EmailWorkItemHandler implements TypedWorkItemHandler<TypedWorkItem<Message, Object>> {
 
     private Connection connection;
@@ -101,10 +99,17 @@ public class EmailWorkItemHandler implements TypedWorkItemHandler<TypedWorkItem<
     }
 
     protected Email createEmail(TypedWorkItem<Message, Object> workItem, Connection connection) {
+        Message message = workItem.getTypedParameters();
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Set<ConstraintViolation<Message>> violations = factory.getValidator().validate(message);
+        if (!violations.isEmpty()) {
+            throw new IllegalArgumentException(violations.toString());
+        }
+
         Email email = new Email();
 
         // setup email
-        email.setMessage(workItem.getTypedParameters());
+        email.setMessage(message);
         email.setConnection(connection);
 
         return email;

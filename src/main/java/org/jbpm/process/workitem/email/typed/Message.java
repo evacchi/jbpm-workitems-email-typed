@@ -23,9 +23,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
+
 public class Message {
 
+    @Valid
     private Recipients recipients;
+    @Email
     private String from;
     private String replyTo;
     private String subject;
@@ -60,7 +65,7 @@ public class Message {
             if (s != null && !"".equals(s)) {
                 Recipient recipient = new Recipient();
                 recipient.setEmail(s);
-                recipient.setType( "To" );
+                recipient.setType( Recipient.Type.TO );
                 recipients.addRecipient(recipient);
             }
         }
@@ -72,7 +77,7 @@ public class Message {
                 if (s != null && !"".equals(s)) {
                     Recipient recipient = new Recipient();
                     recipient.setEmail(s);
-                    recipient.setType( "Bcc" );
+                    recipient.setType( Recipient.Type.BCC );
                     recipients.addRecipient(recipient);
                 }
             }
@@ -85,7 +90,7 @@ public class Message {
                 if (s != null && !"".equals(s)) {
                     Recipient recipient = new Recipient();
                     recipient.setEmail(s);
-                    recipient.setType( "Cc" );
+                    recipient.setType( Recipient.Type.CC );
                     recipients.addRecipient(recipient);
                 }
             }

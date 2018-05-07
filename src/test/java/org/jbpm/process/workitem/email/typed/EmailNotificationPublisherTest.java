@@ -61,7 +61,7 @@ public class EmailNotificationPublisherTest {
     public void setUp() throws Exception {
         System.setProperty("org.jbpm.email.templates.dir", new File("src/test/resources/templates").getAbsolutePath());
         TemplateManager.reset();
-        
+
         ChainedProperties props = ChainedProperties.getChainedProperties( "email.conf", ClassLoaderUtil.getClassLoader( null, getClass(), false ));
         emailHost = props.getProperty( "mail.smtp.host", "localhost" );
         emailPort = props.getProperty( "mail.smtp.port", "2345" );

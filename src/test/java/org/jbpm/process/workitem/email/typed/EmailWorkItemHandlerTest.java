@@ -81,6 +81,19 @@ public class EmailWorkItemHandlerTest extends AbstractBaseTest {
         }
     }
 
+    @Test(expected = WorkItemHandlerRuntimeException.class)
+    public void testValidMessage() throws Exception {
+        EmailWorkItemHandler handler = new EmailWorkItemHandler();
+        handler.setConnection(emailHost, emailPort, null, null);
+
+        Message message = new Message();
+        TypedWorkItemImpl<Message, Object> workItem = new TypedWorkItemImpl<>(message);
+        message.getRecipients().addRecipient(Recipient.to("this is not an email address"));
+
+        WorkItemManager manager = new DefaultWorkItemManager(null);
+        handler.executeWorkItem(workItem, manager);  // should throw
+    }
+
     @Test
     public void testSingleTo() throws Exception {
         EmailWorkItemHandler handler = new EmailWorkItemHandler();
@@ -151,12 +164,12 @@ public class EmailWorkItemHandlerTest extends AbstractBaseTest {
             assertEquals(message.getFrom(), ((InternetAddress) msg.getFrom()[0]).getAddress());
             assertEquals(message.getReplyTo(), ((InternetAddress) msg.getReplyTo()[0]).getAddress());
             List<Recipient> rr = message.getRecipients().getRecipients();
-            assertEquals(getRecipientField(rr, "To").findFirst().orElse(null), ((InternetAddress) msg.getRecipients(RecipientType.TO)[0]).getAddress());
-            assertEquals(getRecipientField(rr, "Cc").findFirst().orElse(null), ((InternetAddress) msg.getRecipients(RecipientType.CC)[0]).getAddress());
+            assertEquals(getRecipientField(rr, Recipient.Type.TO).findFirst().orElse(null), ((InternetAddress) msg.getRecipients(RecipientType.TO)[0]).getAddress());
+            assertEquals(getRecipientField(rr, Recipient.Type.CC).findFirst().orElse(null), ((InternetAddress) msg.getRecipients(RecipientType.CC)[0]).getAddress());
         }
     }
 
-    private Stream<String> getRecipientField(List<Recipient> rr, String field) {
+    private Stream<String> getRecipientField(List<Recipient> rr, Recipient.Type field) {
         return rr.stream().filter(r -> r.getType().equals(field)).map(Recipient::getEmail);
     }
 
@@ -203,9 +216,9 @@ public class EmailWorkItemHandlerTest extends AbstractBaseTest {
         assertEquals(message.getSubject(), msg.getSubject());
         assertEquals(message.getFrom(), ((InternetAddress) msg.getFrom()[0]).getAddress());
         assertEquals(message.getReplyTo(), ((InternetAddress) msg.getReplyTo()[0]).getAddress());
-        assertEquals(getRecipientField(message.getRecipients().getRecipients(), "To").collect(joining("; ")),
+        assertEquals(getRecipientField(message.getRecipients().getRecipients(), Recipient.Type.TO).collect(joining("; ")),
                      ((InternetAddress) msg.getRecipients(RecipientType.TO)[0]).getAddress() + "; " + ((InternetAddress) msg.getRecipients(RecipientType.TO)[1]).getAddress());
-        assertEquals(getRecipientField(message.getRecipients().getRecipients(), "Cc").collect(joining("; ")),
+        assertEquals(getRecipientField(message.getRecipients().getRecipients(), Recipient.Type.CC).collect(joining("; ")),
                      ((InternetAddress) msg.getRecipients(RecipientType.CC)[0]).getAddress() + "; " + ((InternetAddress) msg.getRecipients(RecipientType.CC)[1]).getAddress());
     }
 

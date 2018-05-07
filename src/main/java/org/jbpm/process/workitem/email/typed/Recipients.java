@@ -20,9 +20,11 @@ package org.jbpm.process.workitem.email.typed;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 public class Recipients {
 
-    private List<Recipient> list = new ArrayList<Recipient>();
+    private List<@Valid Recipient> list = new ArrayList<Recipient>();
 
     public void setRecipients(List<Recipient> recipients) {
         for (Recipient recipient : recipients) {
