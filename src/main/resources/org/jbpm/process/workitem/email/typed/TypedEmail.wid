@@ -1,0 +1,18 @@
+[
+  [
+    "name" : "TypedEmail",
+    "description" : "Sending emails",
+    "version" : "1.0",
+    "typedParameters" : "org.jbpm.process.workitem.email.typed.Message",
+    "displayName" : "TypedEmail",
+    "icon" : "email.gif",
+    "category" : "Communication",
+    "defaultHandler" : "org.jbpm.process.workitem.email.typed.EmailWorkItemHandler",
+    "documentation" : "index.html",
+    "dependencies" : [
+      "file:./lib/jbpm-email.jar",
+      "file:./lib/mail-1.4.jar",
+      "file:./lib/activation-1.1.jar"
+    ]
+  ]
+]
